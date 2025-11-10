@@ -17,13 +17,15 @@ public class TeamService : ITeamService
 
     public async Task<List<TeamDto>> GetAllTeamsAsync()
     {
-        var teams = await _context.Teams
+        var teams = await _context.Teams.ToListAsync();
+        
+        var sortedTeams = teams
             .OrderByDescending(t => t.Points)
             .ThenByDescending(t => t.GoalDifference)
             .ThenByDescending(t => t.GoalsFor)
-            .ToListAsync();
+            .ToList();
 
-        return teams.Select(MapToDto).ToList();
+        return sortedTeams.Select(MapToDto).ToList();
     }
 
     public async Task<TeamDto?> GetTeamByIdAsync(int id)
